@@ -1,62 +1,132 @@
 public class BannerApp {
 
-        // Method to generate pattern for letter 'O'
-        public static String[] getOPattern() {
-            return new String[] {
-                    "  *****  ",
-                    " *     * ",
-                    " *     * ",
-                    " *     * ",
-                    " *     * ",
-                    " *     * ",
-                    "  *****  "
-            };
+    static class CharacterPatternMap {
+
+        private final Character character;
+        private final String[] pattern;
+
+        /**
+         * Constructor to initialize character and its pattern
+         *
+         * @param character the character being represented
+         * @param pattern   ASCII art pattern (7 lines)
+         */
+        public CharacterPatternMap(Character character, String[] pattern) {
+            this.character = character;
+            this.pattern = pattern;
         }
 
-        // Method to generate pattern for letter 'P'
-        public static String[] getPPattern() {
-            return new String[] {
-                    " ******  ",
-                    " *     * ",
-                    " *     * ",
-                    " ******  ",
-                    " *        ",
-                    " *        ",
-                    " *        "
-            };
+        /**
+         * @return mapped character
+         */
+        public Character getCharacter() {
+            return character;
         }
 
-        // Method to generate pattern for letter 'S'
-        public static String[] getSPattern() {
-            return new String[] {
-                    "  *****  ",
-                    " *        ",
-                    " *        ",
-                    "  *****  ",
-                    "       * ",
-                    "       * ",
-                    "  *****  "
-            };
+        /**
+         * @return ASCII pattern for the character
+         */
+        public String[] getPattern() {
+            return pattern;
         }
+    }
 
-        // Main method to display the OOPS banner
-        public static void main(String[] args) {
+    /**
+     * Creates and initializes character-pattern mappings
+     *
+     * @return array of CharacterPatternMap
+     */
+    public static CharacterPatternMap[] createCharacterPatternMaps() {
 
-            // Retrieve patterns
-            String[] oPattern = getOPattern();
-            String[] pPattern = getPPattern();
-            String[] sPattern = getSPattern();
+        return new CharacterPatternMap[]{
 
-            // Assemble and print banner line by line
-            for (int i = 0; i < oPattern.length; i++) {
-                System.out.println(
-                        String.join("",
-                                oPattern[i],
-                                oPattern[i],   // 'O' repeated twice
-                                pPattern[i],
-                                sPattern[i]
-                        )
-                );
+                new CharacterPatternMap('O', new String[]{
+                        "  *****  ",
+                        " *     * ",
+                        " *     * ",
+                        " *     * ",
+                        " *     * ",
+                        " *     * ",
+                        "  *****  "
+                }),
+
+                new CharacterPatternMap('P', new String[]{
+                        " ******  ",
+                        " *     * ",
+                        " *     * ",
+                        " ******  ",
+                        " *        ",
+                        " *        ",
+                        " *        "
+                }),
+
+                new CharacterPatternMap('S', new String[]{
+                        "  *****  ",
+                        " *        ",
+                        " *        ",
+                        "  *****  ",
+                        "       * ",
+                        "       * ",
+                        "  *****  "
+                }),
+
+                new CharacterPatternMap(' ', new String[]{
+                        "          ",
+                        "          ",
+                        "          ",
+                        "          ",
+                        "          ",
+                        "          ",
+                        "          "
+                })
+        };
+    }
+
+    /**
+     * Retrieves the ASCII pattern for a given character
+     *
+     * @param ch       character to look up
+     * @param charMaps array of character-pattern mappings
+     * @return pattern array
+     */
+    public static String[] getCharacterPattern(char ch, CharacterPatternMap[] charMaps) {
+
+        for (CharacterPatternMap map : charMaps) {
+            if (map.getCharacter() == ch) {
+                return map.getPattern();
             }
         }
+
+        // Default to space pattern if character not found
+        return getCharacterPattern(' ', charMaps);
+    }
+
+    /**
+     * Prints a message as an ASCII banner
+     *
+     * @param message  text to display
+     * @param charMaps available character patterns
+     */
+    public static void printMessage(String message, CharacterPatternMap[] charMaps) {
+        message = message.toUpperCase();
+        for (int row = 0; row < 7; row++) {
+            StringBuilder lineBuilder = new StringBuilder();
+            for (char ch : message.toCharArray()) {
+                String[] pattern = getCharacterPattern(ch, charMaps);
+                lineBuilder.append(pattern[row]);
+            }
+            System.out.println(lineBuilder.toString());
+        }
+    }
+
+    /**
+     * Main method – Entry point
+     */
+    public static void main(String[] args) {
+
+        CharacterPatternMap[] charMaps = createCharacterPatternMaps();
+        String message = "OOPS";
+
+        printMessage(message, charMaps);
+    }
 }
